@@ -20,19 +20,54 @@ class CompteBancaire:
     def afficherSolde(self):
         return self.__solde
 
-compte = CompteBancaire(100)
+# compte = CompteBancaire(100)
+#
+# sold = compte.afficherSolde()
+# print(sold)
+#
+# compte.deposer(50)
+# sold = compte.afficherSolde()
+# print(sold)
+#
+# compte.retirer(30)
+# sold = compte.afficherSolde()
+# print(sold)
+#
+# compte.retirer(130)
+# sold = compte.afficherSolde()
+# print(sold)
 
-sold = compte.afficherSolde()
-print(sold)
+#Accès controlé avec des getters/setters
 
-compte.deposer(50)
-sold = compte.afficherSolde()
-print(sold)
+# class Personne:
+#     def __init__(self, nom):
+#         self.__nom = nom
+#
+#     def get_nom(self):
+#         return self.__nom
+#
+#     def set_nom(self, nom):
+#         if isinstance(nom, str) and nom != "":
+#             self.__nom = nom
+#
+# personne_one = Personne("Basilio")
+# print(personne_one.get_nom())
+# personne_one.set_nom("Martial")
+# print(personne_one.get_nom())
 
-compte.retirer(30)
-sold = compte.afficherSolde()
-print(sold)
+#Façon python moderne
+class Personne:
+    def __init__(self, nom):
+        self.__nom = nom
 
-compte.retirer(130)
-sold = compte.afficherSolde()
-print(sold)
+    @property
+    def nom(self):
+        return self.__nom
+
+    @nom.setter
+    def nom(self, nom):
+        if isinstance(nom, str) and nom:
+            self.__nom = nom
+
+personne_one = Personne("Basilio")
+print(personne_one.nom)
