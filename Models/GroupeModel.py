@@ -1,8 +1,5 @@
 class GroupeModel(object):
-    def __init__(self, id, nom=""):
-        self.code = id
-        __class__.open()
-        __class__.cur.execute("SELECT * FROM Groupes WHERE id = %s", (id,))
-        dico = __class__.cur.fetchone()
-        self.nom = nom
+    def __init__(self, code = None, nom_g = None):
+        self.code = code
+        self.nom = nom_g
         self.members = []

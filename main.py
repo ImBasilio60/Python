@@ -3,7 +3,7 @@ from Models.TouristeModel import TouristeModel
 
 grp = GroupeModel(5, "Group python")
 
-tour = TouristeModel(1, "Rakoto", grp)
+tour = TouristeModel(1, "Alice", grp)
 
 grp.close()
 
