@@ -1,22 +1,40 @@
 from mysql.connector import connect
 
+class Base(object):
+    __instance = None
+    def __new__(cls):
+        if Base.__instance is None:
+            Base.__instance = super().__new__(cls)
+        return Base.__instance
 
-class Model(object):
-    con = None
-    cur = None
+    def __init__(self):
+        if not hasattr(self, "con"):
+            try:
+                self.con = connect(
+                    host="localhost",
+                    user="root",
+                    password="",
+                    database="tourisme"
+                )
+                self.cur = self.con.cursor(dictionary=True)
+            except Exception as e:
+                print("Erreur de connexion :", e)
+                self.con = None
+                self.cur = None
 
-    def open(self):
-        __class__.con = connect(
-            host='localhost',
-            user='root',
-            password='',
-            database='tourisme',
-        )
-
-        __class__.cur = __class__.con.cursor(dictionary=True)
-
+    def execute(self, query, params=None):
+        try:
+            self.cur.execute(query, params or ())
+            self.con.commit()
+            return self.cur
+        except Exception as e:
+            print("Erreur SQL :", e)
+            return None
 
     def close(self):
-        if None != __class__.cur:
+        if self.con:
+            self.con.close()
+            self.con = None
+            self.cur = None
 
 
