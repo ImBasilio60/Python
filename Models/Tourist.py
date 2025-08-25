@@ -32,14 +32,12 @@ class Tourist:
             query= "DELETE FROM touriste WHERE Numero = %s"
             self.cursor.execute(query, (numero,))
             self.db.con.commit()
+        return None
 
     def list_tourists(self):
         query= "SELECT * FROM touriste"
         self.cursor.execute(query)
         return self.cursor.fetchall()
-
-    def close(self):
-        self.db.close()
 
 
 
