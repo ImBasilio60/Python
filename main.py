@@ -13,7 +13,7 @@ while not stoped:
     res = input("\nVotre choix ?: ")
 
     if res == "1":
-        print("\nVous voulez: \n\t1- créer \n\t2- modifier \n\t3- supprimer \n\t4- lister")
+        print("\nVous voulez: \n\t1- créer \n\t2- modifier \n\t3- supprimer \n\t4- lister \n\t5- rechercher")
         action = input("\nVotre choix ?: ")
 
         if action == "1":
@@ -33,10 +33,14 @@ while not stoped:
                 print('Delete...')
         elif action == "4":
             print(tourist.list_tourists())
+        elif action == "5":
+            numero = input("\nInserez le numero?: ")
+            if numero:
+                print(tourist.read_tourist(numero))
         else:
             print("Option invalide")
     elif res == "2":
-        print("\nVous voulez: \n\t1- créer \n\t2- modifier \n\t3- supprimer \n\t4- lister")
+        print("\nVous voulez: \n\t1- créer \n\t2- modifier \n\t3- supprimer \n\t4- lister \n\t5- rechercher")
         action = input("\nVotre choix ?: ")
         if action == "1":
             nom = input("\nInserez le nom du groupe?: ")
@@ -55,6 +59,10 @@ while not stoped:
                 print('Delete...')
         elif action == "4":
             print(group.list_groups())
+        elif action == "5":
+            numero = input("\nInserez le code?: ")
+            if numero:
+                print(group.read_group(numero))
         else:
             print("Option invalide")
     elif res == "3":
