@@ -1,43 +1,29 @@
 from Models.model import Base
+from Models.Group import Group
 
 class Tourist:
-    def __init__(self):
-      self.db = Base()
-      self.cursor = self.db.cur
+    def __init__(self, id, base: Base):
+        self.numero = id
+        self.base = base
+        self.nom = None
+        self.codeG = None
+        self.group = None
 
-    def create_tourist(self, nom=None):
-        if nom:
-            query= "INSERT INTO touriste (Nom) VALUES (%s)"
-            self.cursor.execute(query, (nom,))
-            self.db.con.commit()
-            return self.cursor.fetchone()
-        return None
+        if self.base.con is not None:
+            self.load_from_db()
 
-    def read_tourist(self, numero = None):
-        if numero:
-            query= "SELECT * FROM touriste WHERE Numero = %s"
-            self.cursor.execute(query, (numero,))
-            return self.cursor.fetchone()
-        return None
+    def load_from_db(self):
+        query = "SELECT Nom, CodeG FROM touriste WHERE Numero = %s"
+        self.base.cur.execute(query, (self.numero,))
+        result = self.base.cur.fetchone()
+        if result:
+            self.nom = result["Nom"]
+            self.codeG = result["CodeG"]
+            self.group = Group(self.codeG, self.base)
+            self.group.add_member(self)
 
-    def update_tourist(self, numero=None, nom=None):
-        if numero:
-            if nom:
-                query= "UPDATE touriste SET Nom = %s WHERE Numero = %s"
-                self.cursor.execute(query, (nom, numero))
-                self.db.con.commit()
-
-    def delete_tourist(self, numero):
-        if numero:
-            query= "DELETE FROM touriste WHERE Numero = %s"
-            self.cursor.execute(query, (numero,))
-            self.db.con.commit()
-        return None
-
-    def list_tourists(self):
-        query= "SELECT * FROM touriste"
-        self.cursor.execute(query)
-        return self.cursor.fetchall()
+    def get_nom(self):
+        return self.nom
 
 
 

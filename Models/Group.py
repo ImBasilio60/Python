@@ -1,40 +1,55 @@
-from .model import Base
-
+from Models.model import Base
 class Group:
-    def __init__(self):
-        self.db = Base()
-        self.cursor = self.db.cur
+    _instances = {}
 
-    def create_group(self, nom):
-        query = "INSERT INTO groupe (NomG) VALUES (%s)"
-        if nom:
-            self.cursor.execute(query, (nom,))
-            self.db.con.commit()
-
-    def delete_group(self, code):
-        query = "DELETE FROM groupe WHERE code = %s"
-        if code:
-            self.cursor.execute(query, (code,))
-            self.db.con.commit()
-
-    def list_groups(self):
-        query = "SELECT * FROM groupe"
-        self.cursor.execute(query)
-        return self.cursor.fetchall()
-
-    def update_group(self, code, nom):
-        if code:
-            query = "UPDATE groupe SET NomG = %s WHERE Code = %s"
-            if nom:
-                self.cursor.execute(query, (nom, code))
-                self.db.con.commit()
-
-    def read_group(self, code):
-        query = "SELECT * FROM groupe WHERE code = %s"
-        if code:
-            self.cursor.execute(query, (code,))
-            return self.cursor.fetchone()
-        return None
+    def __new__(cls, id, base:Base):
+        if id in cls._instances:
+            return cls._instances[id]
+        instance = super().__new__(cls)
+        cls._instances[id] = instance
+        return instance
 
 
+    def __init__(self, id, base: Base):
 
+        if hasattr(self, "_initialized") and self._initialized:
+            return
+
+        self.code = id
+        self.base = base
+        self.nomG = None
+        self.members = []
+
+        if self.base.con is not None:
+            self._load_from_db()
+
+        self._initialized = True
+
+    def _load_from_db(self):
+        query = "SELECT NomG FROM groupe WHERE Code = %s"
+        self.base.cur.execute(query, (self.code,))
+        result = self.base.cur.fetchone()
+        if result:
+            self.nomG = result["NomG"]
+
+
+    # def __setattr__(self, attr, val):
+    #     if attr in ["nomG"]:
+    #         self.__dict__[attr] = val
+    #         self.base.cur.execute("UPDATE groupe SET nomG = %s WHERE code = %s",(val, self.code))
+    #         self.base.con.commit()
+    #     elif attr in ["base", "code"]:
+    #         self.__dict__[attr] = val
+
+    def add_member(self, member):
+        self.members.append(member)
+
+    def get_members(self):
+        return self.members
+
+    def get_nom(self):
+        return self.nomG
+
+    @classmethod
+    def all_instances(cls):
+        return list(cls._instances.values())
