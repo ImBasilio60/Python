@@ -6,7 +6,7 @@ class Group:
         self.code = code
         self.nomG = None
 
-        self.base.cur.execute("SELECT NomG FROM groupe WHERE code = %s", (self.code,))
+        self.base.cur.execute("SELECT NomG FROM groupe WHERE Code = %s", (self.code,))
         dico = self.base.cur.fetchone()
 
         if dico:
@@ -23,7 +23,7 @@ class Group:
 
     @classmethod
     def get_by_id(cls, id):
-            cls.__base.cur.execute("SELECT * FROM groupe WHERE code = %s", (id,))
+            cls.__base.cur.execute("SELECT * FROM groupe WHERE Code = %s", (id,))
             return cls.__base.cur.fetchone()
 
     @classmethod
@@ -33,12 +33,12 @@ class Group:
 
     @classmethod
     def update(cls, id, nom):
-        cls.__base.cur.execute("UPDATE groupe SET nomG = %s WHERE code = %s", (nom, id))
+        cls.__base.cur.execute("UPDATE groupe SET NomG = %s WHERE Code = %s", (nom, id))
         cls.__base.con.commit()
 
     @classmethod
     def delete(cls, id):
-        cls.__base.cur.execute("DELETE FROM groupe WHERE code = %s", (id,))
+        cls.__base.cur.execute("DELETE FROM groupe WHERE Code = %s", (id,))
         cls.__base.con.commit()
 
 
