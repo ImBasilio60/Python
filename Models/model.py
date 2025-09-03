@@ -1,40 +1,99 @@
-from mysql.connector import connect
+from Models.base import Base
 
-class Base(object):
-    __instance = None
-    def __new__(cls):
-        if Base.__instance is None:
-            Base.__instance = super().__new__(cls)
-        return Base.__instance
+class Model:
+    def __str__(self):
+        chaine = ""
+        for attr, value in self.__dict__.items():
+            chaine += f"{attr:11s}: {value}\n"
+        return chaine
 
-    def __init__(self):
-        if not hasattr(self, "con"):
-            try:
-                self.con = connect(
-                    host="localhost",
-                    user="root",
-                    password="",
-                    database="tourisme"
-                )
-                self.cur = self.con.cursor(dictionary=True)
-            except Exception as e:
-                print("Erreur de connexion :", e)
-                self.con = None
-                self.cur = None
+    @classmethod
+    def __close(cls):
+        base = Base()
+        if base.cur:
+            base.cur.close()
+        if base.con:
+            base.con.close()
 
-    def execute(self, query, params=None):
+    @classmethod
+    def get_all(cls):
         try:
-            self.cur.execute(query, params or ())
-            self.con.commit()
-            return self.cur
+            base  = Base()
+            table = cls.__name__.lower()
+            query = f"SELECT * FROM {table}e"
+            base.cur.execute(query)
+            list_dict = base.cur.fetchall()
+            return list_dict
         except Exception as e:
-            print("Erreur SQL :", e)
+            print(f"get all value error: {e}")
+            return []
+
+    @classmethod
+    def get_by_id(cls, id):
+        try:
+            base = Base()
+            table = cls.__name__.lower()
+            pk = f"id_{table}e"
+            query = f"SELECT * FROM {table} WHERE {pk} = %s"
+            base.cur.execute(query, (id,))
+            return base.cur.fetchone()
+        except Exception as e:
+            print(f"get single value error: {e}")
             return None
 
-    def close(self):
-        if self.con:
-            self.con.close()
-            self.con = None
-            self.cur = None
+    @classmethod
+    def insert(cls, data: dict):
+        try:
+            base = Base()
+            table = f"{cls.__name__.lower()}e"
+            query = f"INSERT INTO {table} "
+            data = {"code": 1, "nomG": "Baobab"}
+            # INSERT INTO groupe(code, nomG) VALUES(1, 'baobab')
+            i = 0
+            for attr in data:
+                i = i + 1
+                query = query + attr
+                if i <len(data):
+                    query = query + " , "
+            query += " ) VALUES ("
+            i = 0
+            for _ in data:
+                i = i + 1
+                query = query + "%s "
+                if i < len(data):
+                    query = query + " , "
+            query += " ) "
+
+            lists = list()
+            i = 0
+            for attr in data.keys():
+                lists.append(data[attr])
+
+            tuples = tuple(lists)
+            base.cur.execute(query, tuples)
+            base.con.commit()
+            
+        except Exception as e:
+            print(f"insert value error: {e}")
 
 
+    @classmethod
+    def delete(cls, id):
+        try:
+            base = Base()
+            table = f"{cls.__name__.lower()}e"
+            pk = f"id_{table}"
+            query = f"DELETE FROM {table} WHERE {pk} = %s"
+            base.cur.execute(query, (id,))
+            base.con.commit()
+        except Exception as e:
+            print(f"deleting error: {e}")
+
+    @classmethod
+    def update(cls, query):
+        try:
+            base = Base()
+            base.cur.execute(query)
+            base.con.commit()
+        except Exception as e:
+            print(f"updating error: {e}")

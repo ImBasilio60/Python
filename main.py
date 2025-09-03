@@ -1,22 +1,15 @@
-from Models.model import Base
-from Models.Tourist import Tourist
-from Models.Group import Group
+from Models.Group import  Group
+from Models.Tourist import  Tourist
+from Models.base import Base
 
-base = Base()
+tourists = Tourist.get_all()
+for tourist in tourists:
+    print(tourist)
 
-tourist_6 = Tourist(6, base)
-tourist_7 = Tourist(7, base)
-tourist_8 = Tourist(8, base)
-tourist_9 = Tourist(9, base)
-
-groupes = Group.all_instances()
+groupes = Group.get_all()
 for group in groupes:
-    print("-----------------------------------------------------")
-    print("Membres de la groupe: ", group.get_nom())
-    print("-----------------------------------------------------")
-    membersOfGroup =  group.get_members()
-    for member in membersOfGroup:
-        print(member.get_nom())
+    print(group)
 
 
-base.close()
+
+Base.close()

@@ -1,45 +1,13 @@
-from Models.model import Base
-class Group:
-    __base = Base() #class
-    def __init__(self, code):
-        self.base = Base() #objet
+from Models.model import Model
+
+
+class Group(Model):
+    def __init__(self, code, nomG):
         self.code = code
-        self.nomG = None
-
-        self.base.cur.execute("SELECT NomG FROM groupe WHERE Code = %s", (self.code,))
-        dico = self.base.cur.fetchone()
-
-        if dico:
-            self.nomG = dico["NomG"]
-
-    def __str__(self):
-        chaine = f"Code: {self.code}\n Nom: {self.nomG}\n"
-        return chaine
+        self.nomG = nomG
 
     @classmethod
-    def get_all(cls):
-        cls.__base.cur.execute("SELECT * FROM groupe")
-        return cls.__base.cur.fetchall()
-
-    @classmethod
-    def get_by_id(cls, id):
-            cls.__base.cur.execute("SELECT * FROM groupe WHERE Code = %s", (id,))
-            return cls.__base.cur.fetchone()
-
-    @classmethod
-    def insert(cls, nom):
-        cls.__base.cur.execute("INSERT INTO groupe VALUES (NULL, %s)", (nom,))
-        cls.__base.con.commit()
-
-    @classmethod
-    def update(cls, id, nom):
-        cls.__base.cur.execute("UPDATE groupe SET NomG = %s WHERE Code = %s", (nom, id))
-        cls.__base.con.commit()
-
-    @classmethod
-    def delete(cls, id):
-        cls.__base.cur.execute("DELETE FROM groupe WHERE Code = %s", (id,))
-        cls.__base.con.commit()
-
-
-
+    def update(cls, code, nomG):
+        if code and nomG:
+            query = f"UPDATE groupe SET nomG = \"{nomG}\" WHERE id_groupe = {code}"
+            Model.update(query)

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Aug 13, 2025 at 04:53 AM
+-- Generation Time: Aug 28, 2025 at 07:22 AM
 -- Server version: 9.1.0
 -- PHP Version: 8.3.14
 
@@ -34,7 +34,15 @@ CREATE TABLE IF NOT EXISTS `groupe` (
   `Code` int NOT NULL AUTO_INCREMENT,
   `NomG` varchar(25) NOT NULL,
   PRIMARY KEY (`Code`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `groupe`
+--
+
+INSERT INTO `groupe` (`Code`, `NomG`) VALUES
+(1, 'Sifaka'),
+(2, 'Ravinala');
 
 -- --------------------------------------------------------
 
@@ -46,8 +54,20 @@ DROP TABLE IF EXISTS `touriste`;
 CREATE TABLE IF NOT EXISTS `touriste` (
   `Numero` int NOT NULL AUTO_INCREMENT,
   `Nom` varchar(25) NOT NULL,
-  PRIMARY KEY (`Numero`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `CodeG` int DEFAULT NULL,
+  PRIMARY KEY (`Numero`),
+  KEY `FK_TOURISTE_GROUPE` (`CodeG`)
+) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `touriste`
+--
+
+INSERT INTO `touriste` (`Numero`, `Nom`, `CodeG`) VALUES
+(6, 'Rakoto', 2),
+(7, 'Rasoa', 1),
+(8, 'Njaka', 2),
+(9, 'Martial', 1);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
