@@ -6,9 +6,9 @@ tourists = Tourist.get_all()
 for tourist in tourists:
     print(tourist)
 
-groupes = Group.get_all()
-for group in groupes:
-    print(group)
+# groupes = Group.get_all()
+# for group in groupes:
+#     print(group)
 
 
 
