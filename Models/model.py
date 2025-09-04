@@ -32,8 +32,8 @@ class Model:
     def get_by_id(cls, id):
         try:
             base = Base()
-            table = cls.__name__.lower()
-            pk = f"id_{table}e"
+            table = f"{cls.__name__.lower()}e"
+            pk = f"id_{table}"
             query = f"SELECT * FROM {table} WHERE {pk} = %s"
             base.cur.execute(query, (id,))
             return base.cur.fetchone()
