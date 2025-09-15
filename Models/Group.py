@@ -1,49 +1,19 @@
-from typing import reveal_type
-
 from Models.model import Model
 
-
 class Group(Model):
-    _instances = {}
+    objects = {}
 
-    def __new__(cls, id):
-        if id in cls._instances:
-            return cls._instances[id]
-        instance = super().__new__(cls)
-        cls._instances[id] = instance
-        return instance
+    def __new__(cls, code):
+        if code not in list(cls._objects.keys()):
+            cls.objects[code] = super(Group, cls).__new__(cls)
+            return cls.objects[code]
+        else:
+            return cls._objects[code]
 
     def __init__(self, code):
-
-        if hasattr(self, "_initialized") and self._initialized:
-            return
-
-        self.code = code
-        self.nomG = None
-        self.members = []
-
-        if self.code:
-            self._load_from_db()
-
-        self._initialized = True
-
-    def _load_from_db(self):
-        result = self.get_by_id(self.code)
-        if result:
-            self.nomG = result["NomG"]
-
-    def add_member(self, member):
-        self.members.append(member)
-
-    def get_members(self):
-        return self.members
-
-    def get_nom(self):
-        return self.nomG
-
-    @classmethod
-    def all_instances(cls):
-        return list(cls._instances.values())
-
-
+        if not hasattr(self, "code"):
+            self.code = code
+            dico = Group.get_by_id(code)
+            nomG = dico["nomG"]
+            self.members = list()
 

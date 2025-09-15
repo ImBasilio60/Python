@@ -1,3 +1,5 @@
-CRUD
-getAttr
-setAttr
+//server
+module uvicorn
+
+uvicorn
+uvicorn main:app --reload

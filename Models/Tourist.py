@@ -4,20 +4,20 @@ from Models.model import Model
 class Tourist(Model):
     def __init__(self, numero):
         self.numero = numero
-        self.nom = None
-        self.id_groupe = None
+        dico = Tourist.get_by_id(numero)
+        self.nom = dico["nom"]
+        code = dico["id_groupe"]
+        self.groupe = Group(code)
+        self.groupe.members.append(self)
 
-        if self.numero:
-            self._load_from_db()
 
-    def _load_from_db(self):
-        result = self.get_by_id(self.numero)
-        if result:
-            self.nom = result["Nom"]
-            self.id_groupe = result["id_groupe"]
-            self.group = Group(self.id_groupe)
-            self.group.add_member(self)
 
-    def get_nom(self):
-        return self.nom
+
+# Aona ny fomba ahafahana mi-controller attribut static
+# Meta class
+# Controle d'acces aux attributs statique en Python
+# equivalentes:
+# __setattr__ et __getattr__ pour les attributs de classmethod
+# => class Meta()
+
 
